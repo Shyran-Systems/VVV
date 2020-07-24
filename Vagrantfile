@@ -538,6 +538,9 @@ Vagrant.configure('2') do |config|
     use_db_share = vvv_config['general']['db_share_type'] == true
   end
   if use_db_share == true
+    puts " ⚠ ! Shared DB Folder is turned on! If this works for that's great,"
+    puts " ⚠ ! but a lot of users have issues. We don't recommend turning this on."
+    puts " ⚠ ! Make sure to backup your database before changing this option."
     # Map the MySQL Data folders on to mounted folders so it isn't stored inside the VM
     config.vm.synced_folder 'database/data/', '/var/lib/mysql', create: true, owner: 9001, group: 9001, mount_options: ['dmode=775', 'fmode=664']
 
@@ -605,6 +608,9 @@ Vagrant.configure('2') do |config|
     override.vm.synced_folder 'log/provisioners', '/var/log/provisioners', create: true, owner: 'root', group: 'syslog', mount_options: []
 
     if use_db_share == true
+      puts " ⚠ ! Shared DB Folder is turned on! If this works for that's great,"
+      puts " ⚠ ! but a lot of users have issues. We don't recommend turning this on."
+      puts " ⚠ ! Make sure to backup your database before changing this option."
       # Map the MySQL Data folders on to mounted folders so it isn't stored inside the VM
       override.vm.synced_folder 'database/data/', '/var/lib/mysql', create: true, owner: 112, group: 115, mount_options: []
     end
@@ -626,6 +632,9 @@ Vagrant.configure('2') do |config|
     override.vm.synced_folder 'www/', '/srv/www', owner: 'vagrant', group: 'www-data', mount_options: ['dir_mode=0775', 'file_mode=0774']
 
     if use_db_share == true
+      puts " ⚠ ! Shared DB Folder is turned on! If this works for that's great,"
+      puts " ⚠ ! but a lot of users have issues. We don't recommend turning this on."
+      puts " ⚠ ! Make sure to backup your database before changing this option."
       # Map the MySQL Data folders on to mounted folders so it isn't stored inside the VM
       override.vm.synced_folder 'database/data/', '/var/lib/mysql', create: true, owner: 112, group: 115, mount_options: ['dir_mode=0775', 'file_mode=0664']
     end
@@ -654,6 +663,9 @@ Vagrant.configure('2') do |config|
     override.vm.synced_folder 'log/provisioners', '/var/log/provisioners', create: true, owner: 'root', group: 'syslog', mount_options: ['umask=000']
 
     if use_db_share == true
+      puts " ⚠ ! Shared DB Folder is turned on! If this works for that's great,"
+      puts " ⚠ ! but a lot of users have issues. We don't recommend turning this on."
+      puts " ⚠ ! Make sure to backup your database before changing this option."
       # Map the MySQL Data folders on to mounted folders so it isn't stored inside the VM
       override.vm.synced_folder 'database/data/', '/var/lib/mysql', create: true, owner: 112, group: 115, mount_options: ['umask=000']
     end
@@ -675,7 +687,7 @@ Vagrant.configure('2') do |config|
   # different provisioning, then you may want to consider a new Vagrantfile entirely.
   if File.exist?(File.join(vagrant_dir, 'Customfile'))
     puts " ⚠ ! Running additional Vagrant code in Customfile located at #{File.join(vagrant_dir, 'Customfile')}\n"
-    puts " ⚠ ! Official support is not provided for this feature, it is assumed you are proficient with vagrant\n\n"
+    puts " ⚠ ! Official support is not provided for this feature, it is assumed you are proficient with vagrant.\n\n"
     eval(IO.read(File.join(vagrant_dir, 'Customfile')), binding)
     puts " ⚠ ! Finished running Customfile, resuming normal vagrantfile execution\n\n"
   end
@@ -686,7 +698,7 @@ Vagrant.configure('2') do |config|
     paths = Dir[File.join(args['local_dir'], '**', 'Customfile')]
     paths.each do |file|
       puts " ⚠ ! Running additional site customfile at #{file}\n"
-      puts " ⚠ ! Official support is not provided for this feature.\n\n"
+      puts " ⚠ ! Official support is not provided for this feature, it is assumed you are proficient with vagrant.\n\n"
       eval(IO.read(file), binding)
       puts " ⚠ ! Finished running Customfile, resuming normal vagrantfile execution\n\n"
     end
@@ -700,6 +712,9 @@ Vagrant.configure('2') do |config|
   # should run before the shell commands laid out in provision.sh (or your provision-custom.sh
   # file) should go in this script. If it does not exist, no extra provisioning will run.
   if File.exist?(File.join(vagrant_dir, 'provision', 'provision-pre.sh'))
+    puts " ⚠ ! A provision-pre.sh was found!! This will be going away in a future version."
+    puts " ⚠ ! If you need too install packages or configure the VM, use the utility system:"
+    puts " ⚠ ! https://varyingvagrantvagrants.org/docs/en-US/utilities/"
     config.vm.provision 'pre', type: 'shell', keep_color: true, path: File.join('provision', 'provision-pre.sh'), env: { "VVV_LOG" => "pre" }
   end
 
@@ -710,6 +725,9 @@ Vagrant.configure('2') do |config|
   # created, that is run as a replacement. This is an opportunity to replace the entirety
   # of the provisioning provided by default.
   if File.exist?(File.join(vagrant_dir, 'provision', 'provision-custom.sh'))
+    puts " ⚠ ! A provision-custom.sh was found!! This will be going away in a future version."
+    puts " ⚠ ! If you need too install packages or configure the VM, use the utility system:"
+    puts " ⚠ ! https://varyingvagrantvagrants.org/docs/en-US/utilities/"
     config.vm.provision 'custom', type: 'shell', keep_color: true, path: File.join('provision', 'provision-custom.sh'), env: { "VVV_LOG" => "main-custom" }
   else
     config.vm.provision 'default', type: 'shell', keep_color: true, path: File.join('provision', 'provision.sh'), env: { "VVV_LOG" => "main" }
@@ -781,6 +799,9 @@ Vagrant.configure('2') do |config|
   # put into this file. This provides a good opportunity to install additional packages
   # without having to replace the entire default provisioning script.
   if File.exist?(File.join(vagrant_dir, 'provision', 'provision-post.sh'))
+    puts " ⚠ ! A provision-post.sh was found!! This will be going away in a future version."
+    puts " ⚠ ! If you need too install packages or configure the VM, use the utility system:"
+    puts " ⚠ ! https://varyingvagrantvagrants.org/docs/en-US/utilities/"
     config.vm.provision 'post', type: 'shell', keep_color: true, path: File.join('provision', 'provision-post.sh'), env: { "VVV_LOG" => "post" }
   end
 
@@ -810,8 +831,9 @@ Vagrant.configure('2') do |config|
     config.hostsupdater.aliases = vvv_config['hosts']
     config.hostsupdater.remove_on_suspend = true
   else
-    puts "! Neither the HostManager, GoodHosts or HostsUpdater plugins are installed!!! Domains won't work without one of these plugins!"
-    puts "Run 'vagrant plugin install vagrant-goodhosts' then try again."
+    puts " ⚠ ! Neither the HostManager, GoodHosts or HostsUpdater plugins are installed!!!"
+    puts " ⚠ ! vvv.test and site domains won't work without one of these plugins!"
+    puts " ⚠ ! Run 'vagrant plugin install vagrant-goodhosts' then try again."
   end
 
   # Vagrant Triggers
